@@ -1,5 +1,5 @@
 import math
-import pandas as pd
+import statistics
 
 ## arithmetic mean
 def arithmeticMean(data): return sum(data)/len(data)
@@ -19,15 +19,41 @@ def standardDeviation(data):
 def quartiles(data):
      n=len(data)
      dataS = sorted(data)
-     Q1=math.median(dataS)
+     Q1=statistics.median(dataS)
      if n % 2 == 0:
         lower_half = data[:n // 2]
         upper_half = data[n // 2:]
      else:
         lower_half = data[:n // 2]
         upper_half = data[n // 2 + 1:]
-     Q1 =math.median(lower_half)
-     Q3 =math.median(upper_half)
+     Q2 =statistics.median(lower_half)
+     Q3 =statistics.median(upper_half)
+     return {"Q1": Q1, "Q2": Q2, "Q3": Q3}
+
+    
+def covariance(x,y):
+    if len(x) != len(y):
+        raise ValueError("Both lists must have the same length.")
+    
+    n = len(x)
+    mean_x = sum(x) / n
+    mean_y = sum(y) / n
+
+    cov = sum((x[i] - mean_x) * (y[i] - mean_y) for i in range(n)) / n
+    return cov
+    
+
+def correlation(x,y):
+    if len(x) != len(y):
+        raise ValueError("Lists must be the same length.")
+    
+    n=len(x)
+    devX= standardDeviation(x)
+    devY= standardDeviation(y)
+    cov=covariance(x,y)
+    corll = (devX * devY) / cov
+    return (corll)
+
 
 
    
