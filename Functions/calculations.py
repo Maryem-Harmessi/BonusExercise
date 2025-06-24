@@ -47,16 +47,15 @@ def covariance(x,y):
     return cov
     
 #correlation
-def correlation(x,y):
+def correlation(x, y):
+    print("Using updated correlation function") 
     if len(x) != len(y):
         raise ValueError("Lists must be the same length.")
     
-    n=len(x)
-    devX= standardDeviation(x)
-    devY= standardDeviation(y)
-    cov=covariance(x,y)
-    corll = (devX * devY) / cov
-    return (corll)
+    cov = covariance(x, y)
+    devX = standardDeviation(x)
+    devY = standardDeviation(y)
+    return cov / (devX * devY)
 
 
 
