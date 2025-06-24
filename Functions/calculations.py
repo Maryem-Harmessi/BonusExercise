@@ -48,7 +48,7 @@ def covariance(x,y):
     
 #correlation
 def correlation(x, y):
-    print("Using updated correlation function") 
+    #print("Using updated correlation function") 
     if len(x) != len(y):
         raise ValueError("Lists must be the same length.")
     
@@ -57,6 +57,35 @@ def correlation(x, y):
     devY = standardDeviation(y)
     return cov / (devX * devY)
 
+#regression parameters
+def regression_slope(x,y):
+    cov = covariance(x,y)
+    mean = arithmeticMean(x)
+    squared_deviation = sum((x - mean) ** 2 for i in x)
+    regression_slope = cov / squared_deviation
+    return regression_slope
+
+def regression_intercept(x,y):
+    mean_x = arithmeticMean(x)
+    mean_y = arithmeticMean(y)
+    reg_slope = regression_slope(x,y)
+    regression_intercept = mean_y - (mean_x * reg_slope)
+    return regression_intercept 
+
+def regression_line(x,y):
+    intercept = regression_intercept(x,y)
+    slope = regression_slope(x,y)
+    return f"y = {slope} * x - {intercept}"
+
+#Variation (total / explained / unexplained)
+#total variation sum((mean_y - y)^2)
+def totalvariation(x,y):
+    mean_x = arithmeticMean(x)
+    squared_deviation = sum((x - mean_x) ** 2 for i in x)
+    totalvariation = squared_deviation
+    return totalvariation
+
+def explainedvariation(x,y):
+    y_hat_sum = sum((()))
 
 
-   
