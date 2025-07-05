@@ -32,7 +32,7 @@ def quartiles(data):
     Q1 = statistics.median(lower_half)
     Q3 = statistics.median(upper_half)
 
-    return {"Q1": Q1, "Q2": Q2, "Q3": Q3}
+    return {"Q1": round(Q1,2), "Q2": round(Q2,2), "Q3": round(Q3, 2)}
 
 #covariance
 def covariance(x,y):
@@ -58,34 +58,42 @@ def correlation(x, y):
     return cov / (devX * devY)
 
 #regression parameters
-def regression_slope(x,y):
-    cov = covariance(x,y)
-    mean = arithmeticMean(x)
-    squared_deviation = sum((x - mean) ** 2 for i in x)
-    regression_slope = cov / squared_deviation
-    return regression_slope
-
-def regression_intercept(x,y):
+def regression_slope(x, y):
     mean_x = arithmeticMean(x)
+    return covariance(x, y) / sum((xi - mean_x) ** 2 for xi in x)
+
+def regression_intercept(x, y):
+    return arithmeticMean(y) - regression_slope(x, y) * arithmeticMean(x)
+
+def regression_line(x, y):
+    slope = regression_slope(x, y)
+    intercept = regression_intercept(x, y)
+    return f"y = {slope:.4f} * x + {intercept:.4f}"
+
+
+# Regression predictions
+def predicted_values(x, y):
+    slope = regression_slope(x, y)
+    intercept = regression_intercept(x, y)
+    return [slope * xi + intercept for xi in x]
+
+# Total variation
+def total_variation(y):
     mean_y = arithmeticMean(y)
-    reg_slope = regression_slope(x,y)
-    regression_intercept = mean_y - (mean_x * reg_slope)
-    return regression_intercept 
+    total_variation = sum((yi - mean_y) ** 2 for yi in y)
+    return total_variation
 
-def regression_line(x,y):
-    intercept = regression_intercept(x,y)
-    slope = regression_slope(x,y)
-    return f"y = {slope} * x - {intercept}"
+# Explained variation
+def explained_variation(x, y):
+    mean_y = arithmeticMean(y)
+    y_hat = predicted_values(x, y)
+    explained_variation = sum((yhi - mean_y) ** 2 for yhi in y_hat)
+    return explained_variation
 
-#Variation (total / explained / unexplained)
-#total variation sum((mean_y - y)^2)
-def totalvariation(x,y):
-    mean_x = arithmeticMean(x)
-    squared_deviation = sum((x - mean_x) ** 2 for i in x)
-    totalvariation = squared_deviation
-    return totalvariation
-
-def explainedvariation(x,y):
-    y_hat_sum = sum((()))
+# Unexplained variation
+def unexplained_variation(x, y):
+    y_hat = predicted_values(x, y)
+    unexplained_variation = sum((y[i] - y_hat[i]) ** 2 for i in range(len(y)))
+    return unexplained_variation
 
 
