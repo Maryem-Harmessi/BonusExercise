@@ -114,3 +114,54 @@ def plot_boxplot(data, title="Box Plot", ylabel="Values", showfliers=True, color
     plt.grid(True, axis='y', linestyle='--', alpha=0.7)
     plt.tight_layout()
     plt.show()
+
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy.stats import skew
+from scipy.stats import norm
+
+def plot_skewness1(data_list, labels=None, bins=50):
+    """
+    Plot skewness for multiple datasets with histogram, KDE, normal curve, and boxplot.
+
+    Parameters:
+    - data_list: list of arrays/lists (each is a dataset to plot)
+    - labels: list of titles/labels for each subplot
+    - bins: number of histogram bins
+    """
+    num_datasets = len(data_list)
+    fig, axes = plt.subplots(1, num_datasets, figsize=(6 * num_datasets, 5))
+
+    # If only one dataset, wrap axis in a list
+    if num_datasets == 1:
+        axes = [axes]
+
+    for i, data in enumerate(data_list):
+        ax = axes[i]
+
+        # Plot histogram + KDE
+        sns.histplot(data, bins=bins, kde=True, stat='density', ax=ax, color='navy')
+
+        # Overlay normal distribution curve
+        mu, sigma = np.mean(data), np.std(data)
+        x = np.linspace(min(data), max(data), 1000)
+        p = norm.pdf(x, mu, sigma)
+        ax.plot(x, p, 'r', linewidth=2)
+
+        # Add boxplot below
+        ax_box = ax.inset_axes([0, -0.25, 1, 0.15])  # x, y, width, height
+        sns.boxplot(data=data, orient='h', ax=ax_box, color='lightgray')
+        ax_box.set_xticks([])
+        ax_box.set_yticks([])
+        ax_box.axis('off')
+
+        # Title with skewness
+        skew_val = skew(data)
+        title = labels[i] if labels else f"Dataset {i+1}"
+        ax.set_title(f"{title}\nSkewness = {skew_val:.2f}", fontsize=14)
+        ax.set_xlabel('')
+        ax.set_ylabel('')
+
+    plt.tight_layout()
+    plt.show()
