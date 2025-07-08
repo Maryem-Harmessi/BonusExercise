@@ -96,4 +96,16 @@ def unexplained_variation(x, y):
     unexplained_variation = sum((y[i] - y_hat[i]) ** 2 for i in range(len(y)))
     return unexplained_variation
 
+# Mean Squared Error
+def mean_squared_error(x, y):
+    y_hat = predicted_values(x, y)
+    mse = sum((y[i] - y_hat[i]) ** 2 for i in range(len(y))) / len(y)
+    return mse
+
+# R-squared
+def r_squared(x, y):
+    ss_total = total_variation(y)
+    ss_residual = unexplained_variation(x, y)
+    r2 = 1 - (ss_residual / ss_total)
+    return r2
 
