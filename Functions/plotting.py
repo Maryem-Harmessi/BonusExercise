@@ -64,27 +64,25 @@ def plot_scatter(
     plt.tight_layout()
     plt.show()
 
-def plot_skewness(data, title="Skewness Plot", color="skyblue", bins=30, show_kde=True):
-    """
-    Plots a histogram with optional KDE line and displays skewness value.
 
-    Parameters:
-    - data: list, array, or pandas Series
-    - title: plot title
-    - color: color of histogram bars
-    - bins: number of bins in histogram
-    - show_kde: whether to overlay KDE line
-    """
-    plt.figure(figsize=(10, 5))
-    
-    sns.histplot(data, bins=bins, kde=show_kde, color=color, edgecolor="black")
+def plot_skewness(data, bins=30, color="lightblue", title=""):
+    plt.figure(figsize=(8, 5))
 
-    skew_val = stats.skew(data)
-    skew_text = f"Skewness = {skew_val:.2f}"
+    # Histogram with KDE
+    sns.histplot(data, bins=bins, kde=True, color=color, stat='density', edgecolor='black', label='KDE')
 
-    plt.title(f"{title}\n{skew_text}")
-    plt.xlabel("Values")
-    plt.ylabel("Frequency")
+    # Overlay normal distribution
+    mean = np.mean(data)
+    std = np.std(data)
+    x = np.linspace(min(data), max(data), 100)
+    plt.plot(x, norm.pdf(x, mean, std), 'r--', label='Normal')
+
+    # Skewness value
+    skew_val = skew(data)
+    plt.title(f"{title}\nSkewness = {skew_val:.2f}")
+    plt.xlabel("Value")
+    plt.ylabel("Density")
+    plt.legend()
     plt.grid(True)
     plt.tight_layout()
     plt.show()
